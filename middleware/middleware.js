@@ -27,7 +27,7 @@ const upload = multer({
 const uploadFile = (req, res, next) => {
   try {
     upload.single('file')(req, res, next)
-    res.status(200).json({ msg: 'File successfully uploaded' })
+    res.status(201).json({ msg: 'File successfully uploaded' })
   } catch (error) {
     console.log(error);
     res.status({ error: 'Internal Server Error' })
