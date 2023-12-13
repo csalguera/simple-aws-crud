@@ -1,4 +1,4 @@
-import { ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { bucket, s3 } from '../middleware/middleware.js'
 
 const index = async (req, res) => {
@@ -16,8 +16,12 @@ const deleteObject = async (req, res) => {
   try {
     const key = req.params.key
 
-    if (!key) {
-      return res.status(400).json({ error: 'File does not exist' })
+    try {
+      await s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+    } catch (error) {
+      if (error.name === 'NotFound') {
+        return res.status(404).json({ error: 'File not found' })
+      }
     }
 
     await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
