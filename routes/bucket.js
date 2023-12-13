@@ -1,11 +1,17 @@
+// npm modules
 import { Router } from 'express'
+
+// controllers
 import * as bucketCtrl from '../controllers/bucket.js'
+
+// middleware
+import { uploadFile } from '../middleware/middleware.js'
 
 const router = Router()
 
-router.post('/', bucketCtrl.upload)
+// routes
+router.post('/', uploadFile)
 router.get('/', bucketCtrl.index)
-router.put('/', bucketCtrl.update)
-router.delete('/', bucketCtrl.delete)
+router.delete('/:key', bucketCtrl.delete)
 
 export { router }
